@@ -1,0 +1,19 @@
+{
+  "name": "slackbot_challenge",
+  "version": "1.0.0",
+  "description": "",
+  "main": "slack_bot.js",
+  "scripts": {
+    "start": "nodemon",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.15.0",
+    "botkit": "^0.4.0",
+    "botkit-storage-mongo": "^1.0.4",
+    "nodemon": "^1.11.0"
+  }
+}
