@@ -34,7 +34,7 @@ You: Yes
 
 Bot: Great, you will need Ground Beef, Hot Breakfast Sausage... (Bot will tell you what are the ingredients needed)
 
-Bot: You will need to buy 0.5 pound of Ground Beef...(Bot automatically knows what you are missing and need to buy or topup.)
+Bot: You will need to buy 0.5 pound of Ground Beef...(Bot automatically knows what you are missing and suggests what to buy or topup.)
 
 
 
