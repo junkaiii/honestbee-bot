@@ -82,6 +82,13 @@ controller.hears(['find me (.*)'], 'direct_message,direct_mention,mention', func
                         output[i] = recepie_ingredient;
                       }
                       console.log(output);
+                      for(i=0;i<output.length-1;i++){
+                        if (output[i].name == current_user.ingredients.name) {
+                          console.log('found');
+                        } else {
+                          console.log('not found');
+                        }
+                      }
                     })
                     .catch(function(error) {
                       console.log(error);
