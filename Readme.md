@@ -46,7 +46,7 @@ __To deploy in local environment:__
 
 
 
-__Current setbacks and improvments in next version:__
+__Current setbacks and improvements in next version:__
   - Diffing mechanism is not fully completed - it only compares alerts when you have a shortage of a particular ingredient not when it is completely unavailable in your pantry.
   - Rewrite 'find me' conversation - Refactor the code into proper conversations.
   - Send pictures of recipes over slack
