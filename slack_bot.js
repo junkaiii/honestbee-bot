@@ -8,6 +8,7 @@ var os = require('os');
 var axios = require('axios');
 
 var current_user;
+var output = [];
 
 
 var mongoStorage = require('botkit-storage-mongo')({
@@ -57,7 +58,30 @@ controller.hears(['find me (.*)'], 'direct_message,direct_mention,mention', func
                       // console.log(response.data.recipe.ingredients);
                       for (var i = 0; i < response.data.recipe.ingredients.length; i++) {
                         bot.reply(message, response.data.recipe.ingredients[i]);
+
+                        var recepie_ingredient = new Object();
+                        var string = response.data.recipe.ingredients[i];
+
+                        if (string.match(/\d\-\d\/\d/g) != null) {
+                            whole_number = string.split(' ')[0].split('-')[0];
+                            first_fraction = string.split(' ')[0].split('-')[1].split('/')[0];
+                            second_fraction = string.split(' ')[0].split('-')[1].split('/')[1];
+                            recepie_ingredient.quantity = parseInt(whole_number) + (first_fraction / second_fraction);
+                        } else if (string.match(/\d\/\d/g) != null) {
+                            first_fraction = string.split(' ')[0].split('/')[0];
+                            second_fraction = string.split(' ')[0].split('/')[1];
+                            recepie_ingredient.quantity = first_fraction / second_fraction;
+                        } else {
+                            recepie_ingredient.quantity = parseInt(string.match(/\d*\d/g));
+                        }
+
+                        recepie_ingredient.unit = string.split(' ')[1];
+
+                        recepie_ingredient.name = string.split(' ').slice(2).join(' ');
+
+                        output[i] = recepie_ingredient;
                       }
+                      console.log(output);
                     })
                     .catch(function(error) {
                       console.log(error);
@@ -78,47 +102,53 @@ controller.hears(['find me (.*)'], 'direct_message,direct_mention,mention', func
     });
 });
 
-controller.hears(['call me (.*)'], 'direct_message,direct_mention,mention', function(bot, message) {
-  var name = message.match[1];
+controller.hears(['init user'], 'direct_message,direct_mention,mention', function(bot, message) {
   controller.storage.users.get(message.user, function(err, user) {
     if (!user) {
       user = {
         id: message.user,
-        ingredients: [{
-          name: "mayonnaise",
-          quantity: 0.25,
-          unit: "cup"
-        }]
+        ingredients: []
       };
     }
-    user.name = name;
-    controller.storage.users.save(user, function(err, id) {
-      bot.reply(message, 'Got it. I will call you ' + user.name + ' from now on.');
-    });
+    controller.storage.users.save(user, function(err, id) {});
   });
 });
+
+// controller.hears(['call me (.*)'], 'direct_message,direct_mention,mention', function(bot, message) {
+//   var name = message.match[1];
+//   controller.storage.users.get(message.user, function(err, user) {
+//     if (!user) {
+//       user = {
+//         id: message.user,
+//         ingredients: [{
+//           name: "mayonnaise",
+//           quantity: 0.25,
+//           unit: "cup"
+//         }]
+//       };
+//     }
+//     user.name = name;
+//     controller.storage.users.save(user, function(err, id) {
+//       bot.reply(message, 'Got it. I will call you ' + user.name + ' from now on.');
+//     });
+//   });
+// });
 
 controller.hears(['what ingredients'], 'direct_message,direct_mention,mention', function(bot, message) {
   controller.storage.users.get(message.user, function(err, user) {
     if (!user) {
-      user = {
-        id: message.user,
-        ingredients: [{
-          name: "mayonnaise",
-          quantity: 0.25,
-          unit: "tub"
-        },{
-          name: "jam",
-          quantity: 1,
-          unit: "jar"
-        }]
-      };
+      bot.reply(message, 'You do not have an account with us yet. Type "init user" to start!');
+    } else {
+      controller.storage.users.save(user, function(err, id) {
+        if (user.ingredients.length < 1) {
+          bot.reply(message, 'You have no ingredients yet! Type "add ingredient" to add some!');
+        } else {
+          for (var i = 0; i < user.ingredients.length; i++) {
+            bot.reply(message, 'You have: ' + user.ingredients[i].name);
+          }
+        }
+      });
     }
-    controller.storage.users.save(user, function(err, id) {
-      for (var i = 0; i < user.ingredients.length; i++) {
-        bot.reply(message, 'You have: ' + user.ingredients[i].name);
-      }
-    });
   });
 });
 
@@ -144,14 +174,13 @@ askQuantity = function(response, convo) {
 };
 askUnit = function(response, convo) {
   convo.ask("Whats the unit of purchase?", function(response, convo) {
-    convo.say("Ok! Goodbye.");
     ingredient_to_add.unit = response.text;
     console.log(current_user);
     controller.storage.users.get(current_user.id, function(err, user) {
       current_user.ingredients.push(ingredient_to_add);
       controller.storage.users.save(current_user, function(err, id) {
         console.log(current_user);
-        convo.say('Ingredient added!');
+        convo.say('Ok, ingredient added!');
       });
     });
     convo.next();
@@ -161,8 +190,12 @@ askUnit = function(response, convo) {
 controller.hears(['add ingredient'], 'direct_message,direct_mention,mention', function(bot, message) {
   controller.storage.users.get(message.user, function(err, user) {
     current_user = user;
+    if (!user) {
+      bot.reply(message, 'You do not have an account with us yet. Type "init user" to start!');
+    } else {
+      bot.startConversation(message, askName);
+    }
   });
-  bot.startConversation(message, askName);
 });
 
 controller.hears(['test'], 'direct_message,direct_mention,mention', function(bot, message) {
