@@ -12,14 +12,14 @@ var output = [];
 
 
 var mongoStorage = require('botkit-storage-mongo')({
-  mongoUri: 'mongodb://junkaiii:4480866l@ds057066.mlab.com:57066/slackbot'
+  mongoUri: 'yourmongoURI'
 });
 
 var controller = Botkit.slackbot({
   // logLevel: 1, // 1 to 7
   stats_optout: true, // set true for privacy.
-  storage: mongoStorage,
-  // json_file_store: 'path_to_json_database'
+  // storage: mongoStorage,
+  json_file_store: 'path_to_json_database'
 });
 
 var bot = controller.spawn({
@@ -93,7 +93,7 @@ controller.hears(['find me (.*)'], 'direct_message,direct_mention,mention', func
                             }
                             // if (user.ingredients[j].name != output[i].name) {
                             //   bot.reply(message, 'You will need to buy ' + output[i].quanitiy + ' ' + output[i].unit + ' of ' + output[i].name);
-                            // } 
+                            // }
                             else {
                               console.log('not found');
                             }

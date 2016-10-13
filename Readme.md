@@ -40,6 +40,7 @@ Bot: You will need to buy 0.5 pound of Ground Beef...(Bot automatically knows wh
 
 __To deploy in local environment:__
   - Set your Slack token in line 26. (To generate a new nickname and token for the bot visit - https://my.slack.com/services/new/bot)
+  - Set your MongoURI or use local JSON storage (default)
   - Type npm install
   - Type npm start
   - Open your slack page and start chatting with the bot!
