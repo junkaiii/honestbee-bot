@@ -1,12 +1,12 @@
 # HonestBee Smart Bot
 
-The HonestBee Smart Bot is a chat bot that allows customers to keep track of their groceries and search for recipes. It comes with a purchase advisor that checks whats available at home and gives suggestions on what is needed to buy in order to make the recipe.
+The HonestBee Smart Bot is a chat bot that allows customers to keep track of their groceries and search for recipes through the food2fork api. It comes with a purchase advisor that checks whats available at home and gives suggestions on what is needed to buy in order to make the recipe.
 
 ___Walkthrough:___
 
 You: init user (only need to be done once, once done, the bot will create a unique identifier for you and will remember you on next visit).
 
-You: add ingredient (follow the instructions to add the ingredients availble in your pantry)
+You: add ingredient (follow the instructions to add the ingredients available in your pantry)
 
 Bot: What is the ingredient you want to add?
 
@@ -49,5 +49,5 @@ __To deploy in local environment:__
 __Current setbacks and improvments in next version:__
   - Diffing mechanism is not fully completed - it only compares alerts when you have a shortage of a particular ingredient not when it is completely unavailable in your pantry.
   - Rewrite 'find me' conversation - Refactor the code into proper conversations.
-  - Send pictures of recepies over slack
+  - Send pictures of recipes over slack
   - Human speech?
